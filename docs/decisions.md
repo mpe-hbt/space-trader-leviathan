@@ -1,3 +1,11 @@
+---
+title: Entscheidungen
+summary: Register der Architekturentscheidungen (ADRs) des Clients.
+audience: [tech]
+owner: Architektur
+reviewed: 2026-11-13
+---
+
 # Decisions
 
 Each decision is a section `## ADR-nn: Title` with **Status**, **Context**, **Decision** and **Consequences**; add new ones via `decide public`.

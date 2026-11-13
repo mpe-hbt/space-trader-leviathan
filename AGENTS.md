@@ -1,3 +1,11 @@
+---
+title: AGENTS.md
+summary: Regeln für Agenten: Wissensbasis, Entscheidungen, Domänensprache und Umgang mit internen Inhalten.
+audience: [tech]
+owner: Architektur
+reviewed: 2026-11-13
+---
+
 # AGENTS.md
 
 <!-- knowledge-base -->
