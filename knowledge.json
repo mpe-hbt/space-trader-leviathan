@@ -1,0 +1,21 @@
+{
+  "name": "space-trader-leviathan",
+  "decisions": {
+    "file": "docs/decisions.md"
+  },
+  "terms": {
+    "dir": "docs/glossary"
+  },
+  "sources": [
+    {
+      "glob": "docs/**/*.md"
+    },
+    {
+      "glob": "*.md"
+    }
+  ],
+  "glossaries": [
+    "**/*glossar*.md",
+    "**/*glossary*.md"
+  ]
+}
