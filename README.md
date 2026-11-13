@@ -28,7 +28,7 @@ Voraussetzung ist Node.js in der Version aus `.nvmrc` (22). Die App besteht aus 
 
 Hinweis: `npm ci --ignore-scripts`, wie in der CI, lädt das Electron-Binary nicht. Lint, Typprüfung und Tests laufen damit; für `npm run dev` ist `npm install` nötig.
 
-`npm run build` schreibt nach `out/`; der Ordner wird über `.gitignore` ausgeschlossen (#48).
+`npm run build` schreibt nach `out/`; der Ordner steht in `.gitignore` (#48).
 
 ## Dokumentation
 
