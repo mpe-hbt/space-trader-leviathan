@@ -8,7 +8,58 @@
   },
   "sources": [
     {
+      "glob": "docs/decisions.md",
+      "audience": [
+        "tech"
+      ],
+      "summary": "Architekturentscheidungen (ADRs) des Clients."
+    },
+    {
+      "glob": "docs/glossary/*.md",
+      "audience": [
+        "business",
+        "domain",
+        "tech"
+      ]
+    },
+    {
+      "glob": "docs/spacetraders/**/*.md",
+      "audience": [
+        "domain",
+        "tech"
+      ],
+      "boost": 1.2
+    },
+    {
+      "glob": "docs/api/**/*.md",
+      "audience": [
+        "tech"
+      ]
+    },
+    {
+      "glob": "docs/arc42/**/*.md",
+      "audience": [
+        "tech"
+      ]
+    },
+    {
       "glob": "docs/**/*.md"
+    },
+    {
+      "glob": "AGENTS.md",
+      "audience": [
+        "tech"
+      ],
+      "summary": "Regeln für Agenten: Wissensbasis, Entscheidungen, Domänensprache, Umgang mit internen Inhalten."
+    },
+    {
+      "glob": "README.md",
+      "audience": [
+        "business",
+        "domain",
+        "tech"
+      ],
+      "summary": "Einstieg in das Projekt und die Dokumentation."
     },
     {
       "glob": "*.md"
@@ -17,5 +68,104 @@
   "glossaries": [
     "**/*glossar*.md",
     "**/*glossary*.md"
-  ]
+  ],
+  "fitness": {
+    "questions": [
+      {
+        "question": "Wie viele Anfragen pro Sekunde erlaubt die SpaceTraders-API?",
+        "expect": "public:docs/api/rate-limits.md"
+      },
+      {
+        "question": "Was passiert beim Server-Reset mit meinem Agent?",
+        "expect": "public:docs/spacetraders/server-reset.md"
+      },
+      {
+        "question": "Unterschied zwischen Account-Token und Agent-Token",
+        "expect": "public:docs/glossary/Account-Token.md"
+      },
+      {
+        "question": "Welche Header schickt die API bei HTTP 429 zurück?",
+        "expect": "public:docs/api/rate-limits.md"
+      },
+      {
+        "question": "Wie registriere ich einen Agent per API?",
+        "expect": "public:docs/api/authentifizierung.md"
+      },
+      {
+        "question": "Welche Flugmodi gibt es und wie viel Treibstoff verbrauchen sie?",
+        "expect": "public:docs/spacetraders/navigation.md"
+      },
+      {
+        "question": "Wie springe ich in ein anderes System?",
+        "expect": "public:docs/spacetraders/navigation.md"
+      },
+      {
+        "question": "Warum sehe ich am Markt keine Preise?",
+        "expect": "public:docs/spacetraders/maerkte.md"
+      },
+      {
+        "question": "Was ist der Unterschied zwischen Export, Import und Austauschware?",
+        "expect": "public:docs/spacetraders/maerkte.md"
+      },
+      {
+        "question": "Wie funktioniert ein Survey beim Abbau?",
+        "expect": "public:docs/spacetraders/abbau.md"
+      },
+      {
+        "question": "Wie nehme ich einen Auftrag an und erfülle ihn?",
+        "expect": "public:docs/spacetraders/agenten-und-fraktionen.md"
+      },
+      {
+        "question": "Was bedeutet Fehlercode 4203?",
+        "expect": "public:docs/api/fehlercodes.md"
+      },
+      {
+        "question": "Wie baue ich ein Modul oder einen Mount ein?",
+        "expect": "public:docs/spacetraders/schiffe-und-ausruestung.md"
+      },
+      {
+        "question": "Was kostet eine Reparatur und was ist Integrität?",
+        "expect": "public:docs/spacetraders/wartung.md"
+      },
+      {
+        "question": "Wie beliefere ich ein Bauprojekt am Sprungtor?",
+        "expect": "public:docs/spacetraders/erkundung.md"
+      },
+      {
+        "question": "Was sind die ersten Schritte als neuer Agent?",
+        "expect": "public:docs/spacetraders/erster-spielablauf.md"
+      },
+      {
+        "question": "Wo werden Tokens und der Anthropic-API-Key gespeichert?",
+        "expect": "public:docs/arc42/08-konzepte.md"
+      },
+      {
+        "question": "Darf der Board-Computer ohne Bestätigung Aktionen ausführen?",
+        "expect": "public:docs/arc42/08-konzepte.md"
+      },
+      {
+        "question": "Aus welchen Bausteinen besteht der Client?",
+        "expect": "public:docs/arc42/05-bausteinsicht.md"
+      },
+      {
+        "question": "Warum Electron statt Tauri oder Web-App?",
+        "expect": "public:docs/decisions.md"
+      },
+      {
+        "question": "Wie lange dauert es, alle Systeme und Wegpunkte zu laden?",
+        "expect": "public:docs/arc42/11-risiken.md"
+      },
+      {
+        "question": "Wie legt der Board-Computer ein GitHub-Issue an?",
+        "expect": "public:docs/arc42/06-laufzeitsicht.md"
+      }
+    ],
+    "thresholds": {
+      "integrity": 119,
+      "completeness": 100,
+      "findability": 100,
+      "ownership": 100,
+      "connectivity": 100
+    }
+  }
 }
