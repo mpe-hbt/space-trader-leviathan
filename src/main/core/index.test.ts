@@ -88,7 +88,11 @@ describe("createCore", () => {
     expect(transport).toHaveBeenCalledTimes(1);
     const sent = transport.mock.calls[0]![0] as Request;
     expect(sent.url).toBe(`${SPACETRADERS_API_BASE_URL}/`);
-    expect(core.requestQueue.metrics().averageWaitMs).toBe(0);
+    // Real clock: enqueue and dispatch may fall into different milliseconds, but the
+    // request must not have waited for a token.
+    const metrics = core.requestQueue.metrics();
+    expect(metrics.queueLength).toBe(0);
+    expect(metrics.maxWaitMs).toBeLessThan(500);
     await core.shutdown();
   });
 
