@@ -23,7 +23,7 @@ Das Glossar ist die verbindliche Domänensprache des Projekts: ein Begriff je Sa
 | Universum | [System](../glossary/System.md), [Sektor](../glossary/Sektor.md), [Wegpunkt](../glossary/Wegpunkt.md), [Orbital](../glossary/Orbital.md), [Wegpunkt-Merkmal](../glossary/Wegpunkt-Merkmal.md), [Wegpunkt-Modifikator](../glossary/Wegpunkt-Modifikator.md), [Sprungtor](../glossary/Sprungtor.md), [Bauprojekt](../glossary/Bauprojekt.md), [Kartieren](../glossary/Kartieren.md), [Scan](../glossary/Scan.md) |
 | Handel | [Markt](../glossary/Markt.md), [Handelsware](../glossary/Handelsware.md), [Export](../glossary/Export.md), [Import](../glossary/Import.md), [Austauschware](../glossary/Austauschware.md), [Angebot](../glossary/Angebot.md), [Aktivität](../glossary/Aktivität.md), [Handelsvolumen](../glossary/Handelsvolumen.md), [Lieferkette](../glossary/Lieferkette.md), [Werft](../glossary/Werft.md) |
 | Abbau | [Abbau](../glossary/Abbau.md), [Survey](../glossary/Survey.md), [Absaugen](../glossary/Absaugen.md), [Raffinieren](../glossary/Raffinieren.md), [Abwerfen](../glossary/Abwerfen.md), [Transfer](../glossary/Transfer.md) |
-| Client | [Board-Computer](../glossary/Board-Computer.md), [Routine](../glossary/Routine.md), [Request-Queue](../glossary/Request-Queue.md), [Kern](../glossary/Kern.md), [Renderer](../glossary/Renderer.md) |
+| Client | [Board-Computer](../glossary/Board-Computer.md), [Routine](../glossary/Routine.md), [Request-Queue](../glossary/Request-Queue.md), [Kern](../glossary/Kern.md), [Renderer](../glossary/Renderer.md), [Tray-Modus](../glossary/Tray-Modus.md), [Anthropic-API-Key](../glossary/Anthropic-API-Key.md), [GitHub-Token](../glossary/GitHub-Token.md) |
 
 ## Regeln
 
