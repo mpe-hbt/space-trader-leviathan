@@ -1,0 +1,39 @@
+.stl-progress-ring {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+}
+
+.stl-progress-ring > svg {
+  grid-area: 1 / 1;
+}
+
+.stl-progress-ring__track {
+  stroke: var(--stl-border-subtle);
+}
+
+.stl-progress-ring__arc {
+  transition: stroke-dashoffset var(--stl-duration-normal) var(--stl-easing-enter);
+}
+
+.stl-progress-ring--arrival .stl-progress-ring__arc {
+  stroke: var(--stl-status-info);
+}
+
+.stl-progress-ring--cooldown .stl-progress-ring__arc {
+  stroke: var(--stl-status-warning);
+}
+
+.stl-progress-ring__text {
+  grid-area: 1 / 1;
+  color: var(--stl-text-primary);
+  font-family: var(--stl-font-family-mono);
+  font-size: var(--stl-font-size-hint);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stl-progress-ring__arc {
+    transition: none;
+  }
+}

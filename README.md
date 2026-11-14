@@ -26,6 +26,8 @@ Der Kern schreibt seine Logs nach `<Benutzerdatenverzeichnis>/logs/leviathan.log
 | `npm run lint` | Code mit ESLint prüfen |
 | `npm run typecheck` | Typen von Kern, Brücke, Paketen und Renderer prüfen |
 | `npm run format` | Code mit Prettier formatieren (`npm run format:check` prüft nur) |
+| `npm run storybook` | Komponentenbibliothek in Storybook unter http://localhost:6006 ansehen |
+| `npm run build-storybook` | Storybook statisch nach `storybook-static/` bauen |
 | `npm run build` | App nach `out/` bauen (`npm start` startet den Build) |
 | `npm run api:generate` | Typen des SpaceTraders-Clients aus der gepinnten Spezifikation erzeugen |
 | `npm run api:check` | Prüfen, ob die erzeugten Typen zur gepinnten Spezifikation passen (läuft auch in `npm test`) |

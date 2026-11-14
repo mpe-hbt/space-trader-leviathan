@@ -1,0 +1,31 @@
+.stl-card {
+  padding: var(--stl-space-16);
+  border-radius: var(--stl-radius-lg);
+  background: var(--stl-bg-surface2);
+  color: var(--stl-text-primary);
+}
+
+.stl-card[data-active] {
+  border-top: 2px solid var(--stl-accent-primary);
+}
+
+.stl-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--stl-space-12);
+  margin-bottom: var(--stl-space-12);
+}
+
+.stl-card__title {
+  margin: 0;
+  font-family: var(--stl-font-family-heading);
+  font-size: var(--stl-font-size-h3);
+  line-height: var(--stl-line-height-heading);
+  font-weight: 600;
+}
+
+.stl-card__actions {
+  display: flex;
+  gap: var(--stl-space-8);
+}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { AppInfo } from "@leviathan/shared";
+import { Button } from "./components";
 import { SettingsDialog } from "./settings/SettingsDialog";
 import "./App.css";
 
@@ -15,9 +16,9 @@ export function App() {
     <main className="app">
       <h1 className="app__title">{info?.name ?? "…"}</h1>
       <p className="app__version">Version {info?.version ?? "…"}</p>
-      <button type="button" onClick={() => setSettingsOpen(true)}>
+      <Button variant="secondary" onClick={() => setSettingsOpen(true)}>
         Einstellungen
-      </button>
+      </Button>
       <SettingsDialog open={settingsOpen} onClose={() => setSettingsOpen(false)} />
     </main>
   );

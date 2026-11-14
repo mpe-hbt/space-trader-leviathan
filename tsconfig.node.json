@@ -20,6 +20,7 @@
     "src/renderer/src/**/*.test.ts",
     "packages/*/src",
     "electron.vite.config.ts",
-    "vitest.config.ts"
+    "vitest.config.ts",
+    ".storybook/main.ts"
   ]
 }

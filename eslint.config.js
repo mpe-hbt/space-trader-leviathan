@@ -6,16 +6,24 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist/", "out/", "node_modules/", "packages/api-client/src/generated/"] },
+  {
+    ignores: [
+      "dist/",
+      "out/",
+      "storybook-static/",
+      "node_modules/",
+      "packages/api-client/src/generated/",
+    ],
+  },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    files: ["src/renderer/**/*.{ts,tsx}"],
+    files: ["src/renderer/**/*.{ts,tsx}", ".storybook/preview.tsx"],
     extends: [reactHooks.configs.flat.recommended],
     languageOptions: { globals: globals.browser },
   },
   {
-    files: ["src/main/**/*.ts", "src/preload/**/*.ts", "*.config.{js,ts}"],
+    files: ["src/main/**/*.ts", "src/preload/**/*.ts", "*.config.{js,ts}", ".storybook/main.ts"],
     languageOptions: { globals: globals.node },
   },
   {

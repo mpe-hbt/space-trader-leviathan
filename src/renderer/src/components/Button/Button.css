@@ -1,0 +1,74 @@
+.stl-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--stl-space-8);
+  min-width: var(--stl-space-24);
+  min-height: var(--stl-space-24);
+  padding: var(--stl-space-4) var(--stl-space-12);
+  border: 1px solid transparent;
+  border-radius: var(--stl-radius-md);
+  background: transparent;
+  color: var(--stl-text-primary);
+  font-family: var(--stl-font-family-body);
+  font-size: var(--stl-font-size-base);
+  font-weight: 500;
+  line-height: var(--stl-line-height-text);
+  cursor: pointer;
+  transition:
+    background-color var(--stl-duration-fast) var(--stl-easing-enter),
+    border-color var(--stl-duration-fast) var(--stl-easing-enter),
+    color var(--stl-duration-fast) var(--stl-easing-enter);
+}
+
+.stl-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.stl-button[aria-busy="true"] {
+  cursor: progress;
+}
+
+.stl-button--primary {
+  background: var(--stl-accent-primary);
+  color: var(--stl-accent-on-primary);
+}
+
+.stl-button--primary:hover:not(:disabled, [aria-busy="true"]) {
+  background: var(--stl-accent-primary-hover);
+}
+
+.stl-button--secondary {
+  border-color: var(--stl-border-control);
+}
+
+.stl-button--secondary:hover:not(:disabled, [aria-busy="true"]),
+.stl-button--quiet:hover:not(:disabled, [aria-busy="true"]) {
+  background: var(--stl-bg-surface3);
+}
+
+.stl-button--danger {
+  border-color: var(--stl-status-danger);
+  color: var(--stl-status-danger);
+}
+
+.stl-button--danger:hover:not(:disabled, [aria-busy="true"]) {
+  background: color-mix(in srgb, var(--stl-status-danger) 16%, transparent);
+}
+
+.stl-button__spinner {
+  animation: stl-button-spin 1s linear infinite;
+}
+
+@keyframes stl-button-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stl-button__spinner {
+    animation: none;
+  }
+}
