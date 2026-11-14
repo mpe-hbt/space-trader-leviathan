@@ -16,7 +16,10 @@
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
     "test": "vitest run",
-    "check": "npm run lint && npm run typecheck && npm run test"
+    "check": "npm run lint && npm run typecheck && npm run test",
+    "api:generate": "node packages/api-client/scripts/codegen.mjs",
+    "api:check": "node packages/api-client/scripts/codegen.mjs --check",
+    "api:update-spec": "node packages/api-client/scripts/update-spec.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -30,6 +33,8 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.14.0",
+    "openapi-fetch": "^0.17.0",
+    "openapi-typescript": "^7.13.0",
     "prettier": "^3.10.1",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
@@ -37,5 +42,10 @@
     "typescript-eslint": "^8.72.2",
     "vite": "^8.3.8",
     "vitest": "^5.1.0"
+  },
+  "overrides": {
+    "openapi-typescript": {
+      "typescript": "$typescript"
+    }
   }
 }
