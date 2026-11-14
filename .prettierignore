@@ -5,3 +5,5 @@ package-lock.json
 docs/
 **/*.md
 knowledge.json
+packages/api-client/src/generated/
+packages/api-client/spec/

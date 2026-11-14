@@ -14,7 +14,7 @@ Status: Planung. Die Roadmap steht in Issue #1, der Tech-Stack in ADR-01 ([Entsc
 
 ## Entwicklung
 
-Voraussetzung ist Node.js in der Version aus `.nvmrc` (22). Die App besteht aus dem Kern (`src/main`), der IPC-Brücke (`src/preload`) und dem Renderer (`src/renderer`, React); gemeinsamer Code liegt in `packages/shared`, der spätere SpaceTraders-Client in `packages/api-client`.
+Voraussetzung ist Node.js in der Version aus `.nvmrc` (22). Die App besteht aus dem Kern (`src/main`), der IPC-Brücke (`src/preload`) und dem Renderer (`src/renderer`, React); gemeinsamer Code liegt in `packages/shared`, der SpaceTraders-Client in `packages/api-client`.
 
 | Befehl | Zweck |
 |---|---|
@@ -25,6 +25,9 @@ Voraussetzung ist Node.js in der Version aus `.nvmrc` (22). Die App besteht aus 
 | `npm run typecheck` | Typen von Kern, Brücke, Paketen und Renderer prüfen |
 | `npm run format` | Code mit Prettier formatieren (`npm run format:check` prüft nur) |
 | `npm run build` | App nach `out/` bauen (`npm start` startet den Build) |
+| `npm run api:generate` | Typen des SpaceTraders-Clients aus der gepinnten Spezifikation erzeugen |
+| `npm run api:check` | Prüfen, ob die erzeugten Typen zur gepinnten Spezifikation passen (läuft auch in `npm test`) |
+| `npm run api:update-spec` | Neue Spezifikation herunterladen (braucht Netz); danach `api:generate` ausführen |
 
 Hinweis: `npm ci --ignore-scripts`, wie in der CI, lädt das Electron-Binary nicht. Lint, Typprüfung und Tests laufen damit; für `npm run dev` ist `npm install` nötig.
 
