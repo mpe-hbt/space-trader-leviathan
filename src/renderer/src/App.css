@@ -1,0 +1,16 @@
+.app {
+  padding: var(--stl-space-32);
+}
+
+.app__title {
+  margin: 0 0 var(--stl-space-8);
+  font-family: var(--stl-font-family-heading);
+  font-size: var(--stl-font-size-h1);
+  line-height: var(--stl-line-height-heading);
+  font-weight: 600;
+}
+
+.app__version {
+  margin: 0;
+  color: var(--stl-text-secondary);
+}
