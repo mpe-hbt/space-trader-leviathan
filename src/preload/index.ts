@@ -3,6 +3,7 @@ import {
   IpcChannel,
   type AppInfo,
   type CoreEvent,
+  type GameStateSnapshot,
   type LeviathanApi,
   type SaveResult,
   type SettingsStatus,
@@ -14,6 +15,7 @@ const api: LeviathanApi = {
   setSecret: (name, value) =>
     ipcRenderer.invoke(IpcChannel.SetSecret, name, value) as Promise<SaveResult>,
   clearSecret: (name) => ipcRenderer.invoke(IpcChannel.ClearSecret, name) as Promise<SaveResult>,
+  getGameState: () => ipcRenderer.invoke(IpcChannel.GetGameState) as Promise<GameStateSnapshot>,
   onCoreEvent(listener) {
     // Pass only the payload; the IpcRendererEvent never reaches the renderer.
     const wrapped = (_event: IpcRendererEvent, payload: CoreEvent) => listener(payload);

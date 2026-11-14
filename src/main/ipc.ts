@@ -37,7 +37,7 @@ export function isAllowedSender(
 }
 
 export interface IpcDependencies {
-  core: Pick<Core, "settings" | "logger">;
+  core: Pick<Core, "settings" | "logger" | "cache">;
   appInfo: () => AppInfo;
   allowedRendererUrl: string;
 }
@@ -51,6 +51,7 @@ export function registerIpcHandlers(handle: HandleFunction, deps: IpcDependencie
     [IpcChannel.GetSettings]: () => core.settings.status(),
     [IpcChannel.SetSecret]: (name, value) => core.settings.setSecret(name, value),
     [IpcChannel.ClearSecret]: (name) => core.settings.clearSecret(name),
+    [IpcChannel.GetGameState]: () => core.cache.getGameState(),
     // Main → renderer only; no handler.
     [IpcChannel.CoreEvent]: undefined,
   };
