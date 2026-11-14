@@ -86,3 +86,20 @@ Each decision is a section `## ADR-nn: Title` with **Status**, **Context**, **De
   - Ein automatisierter Kontrasttest (vitest) prüft alle Text-Hintergrund-Paare aus der Tabelle; eine neue Farbe kommt nur mit bestandenem Test hinzu.
   - Die Karten (#28, #29) und Animationen (#30) übernehmen Farben und Bewegungsregeln aus diesen Tokens.
   - Umsetzung in eigenen Issues: Design-Tokens und Theme, Komponentenbibliothek mit Storybook, fachliche Icons (siehe #27).
+
+## ADR-04: Lokaler Spielstand in SQLite über node:sqlite
+
+- **Status:** gilt (#8)
+- **Kontext:** Der [Kern](glossary/Kern.md) soll den [Spielstand](glossary/Spielstand.md) lokal halten, damit die Oberfläche nach einem Neustart sofort den letzten bekannten Stand zeigt, Marktpreise als Zeitreihe auswertbar sind und ein [Server-Reset](glossary/Server-Reset.md) sauber getrennt wird. ADR-01 sieht dafür SQLite im Hauptprozess vor. `better-sqlite3` ist ein natives Modul und braucht einen Rebuild je Electron-Version. Node 22+ und Electron bringen `node:sqlite` mit, ohne neue Abhängigkeit.
+- **Entscheidung:** Der Spielstand liegt in SQLite über `node:sqlite`.
+  - **Port:** Der Kern kennt nur die schmale Schnittstelle `SqlDatabase`; der Adapter `src/main/adapters/sqlite.ts` setzt sie mit `DatabaseSync` um.
+  - **Datei:** Eine Datei `leviathan.db` im Benutzerdatenverzeichnis.
+  - **Trennung je Reset:** `reset_date` ist Teil jedes Schlüssels; jede Abfrage filtert darauf. Alte Resets werden archiviert, nicht gelöscht.
+  - **Reset-Prüfung:** `GET /` beim Start und danach alle 30 Minuten; ein neues `resetDate` beginnt einen neuen Spielstand.
+  - **Datenmodell:** Agent, Schiffe, Systeme, Wegpunkte, Märkte mit Preis-Zeitreihe, Werften, Aufträge und [Transaktionen](glossary/Transaktion.md); Systeme und Wegpunkte werden je Reset nur einmal geladen.
+  - **Ereignisse:** `game-state-changed` nennt nur das Reset-Datum und die geänderten Bereiche; der Renderer holt die Daten bei Bedarf.
+  - **Anfragen:** Alle SpaceTraders-Anfragen des Kerns laufen über den Port `fetch`, in den sich die Request-Queue (#6) einhängt.
+- **Konsequenzen:**
+  - `node:sqlite` ist noch als experimentell markiert; die Prüfung unter Electron 45 erfolgt durch den Owner.
+  - Die Datei wächst ohne Aufräumen alter Spielstände; das Aufräumen ist eine spätere Entscheidung.
+  - Ein Wechsel des Treibers betrifft nur den Adapter.

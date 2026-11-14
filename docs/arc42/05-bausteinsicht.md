@@ -47,7 +47,7 @@ flowchart TB
 | Preload-Brücke | stellt eine kleine, typisierte Schnittstelle bereit und prüft Eingaben | #9 |
 | SpaceTraders-Client | erzeugter API-Client, Fehler-Mapping | #5 |
 | [Request-Queue](../glossary/Request-Queue.md) | Rate-Limit, Prioritäten, Wiederholen | #6 |
-| Cache | Spielzustand, Marktpreis-Zeitreihen, Daten je Reset, Ereignisse an den Renderer | #8 |
+| Cache | Spielstand, Marktpreis-Zeitreihen, Daten je Reset, Ereignisse an den Renderer | #8 |
 | Routinen-Engine | [Routinen](../glossary/Routine.md) als Zustandsautomaten, Scheduler, Tray-Betrieb | #32 bis #37 |
 | Board-Computer-Dienst | Claude-Anbindung, Werkzeuge, Bestätigungen, Audit-Log | #21 bis #26, #39 |
 | GitHub-Dienst | Duplikatsuche und Anlage von Issues | #24 |

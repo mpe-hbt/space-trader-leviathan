@@ -24,8 +24,8 @@ Die Universumsgenerierung kann sich mit einem Reset ändern (Beispiel: im März 
 
 ## Für die Technik
 
-- Erkennung: `GET /` beim Start und regelmäßig; ändert sich `resetDate`, beginnt ein neuer Datenstand.
-- Daten werden je Reset getrennt gespeichert und alte Stände archiviert (Issue #8).
+- Erkennung: `GET /` beim Start und regelmäßig; ändert sich `resetDate`, beginnt ein neuer Spielstand.
+- Der Spielstand wird je Reset getrennt gespeichert; alte Spielstände bleiben archiviert (Issue #8).
 - Routinen werden beim Reset gestoppt; der Board-Computer meldet den Reset (Issue #25).
 - Tokens und Account-Token: [Authentifizierung](../api/authentifizierung.md).
 
