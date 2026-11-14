@@ -19,6 +19,7 @@ Alle Architekturentscheidungen stehen als ADR in [Entscheidungen](../decisions.m
 |---|---|---|---|
 | ADR-01 | Desktop-App mit Electron und durchgehend TypeScript | gilt | Electron statt Web-App oder Tauri; Kern im Hauptprozess mit Queue, Cache, Routinen, Claude und GitHub; Geheimnisse über `safeStorage` |
 | ADR-02 | Oberfläche einsprachig Deutsch | gilt | Alle UI-Texte deutsch mit den Glossarbegriffen; englische API-Namen nur im Code; kein i18n-Framework |
+| ADR-03 | Art Direction: dunkles Sci-Fi-Theme „Tiefsee-Leviathan“ | gilt | Ein dunkles Theme mit festen Farb-Tokens; Space Grotesk, IBM Plex Sans und JetBrains Mono; eigene Icons im Konturstil; Bewegung nur für Zustände; WCAG 2.2 AA |
 
 ## Offene Entscheidungen
 
