@@ -2,6 +2,7 @@
 type: begriff
 aliases: ["Fleet"]
 code: ["Fleet", "/my/ships"]
+nicht-verwenden: ["Geschwader", "Staffel"]
 tags: [begriff]
 ---
 

@@ -4,7 +4,7 @@ summary: Einstieg in die verbindliche Domänensprache; jeder Begriff ist eine ei
 audience: [business, domain, tech]
 tags: [arc42, glossar]
 owner: Architektur
-reviewed: 2026-11-13
+reviewed: 2026-11-14
 ---
 
 # 12 Domänensprache (Glossar)
@@ -29,7 +29,7 @@ Das Glossar ist die verbindliche Domänensprache des Projekts: ein Begriff je Sa
 
 - In der Oberfläche heißt es zum Beispiel „Auftrag“, nicht „Vertrag“ oder „Mission“; „Treibstoff“, nicht „Sprit“.
 - Englische API-Namen bleiben im Code unverändert; die Notiz nennt sie unter „code“.
-- Ob die Oberfläche deutsch, englisch oder zweisprachig wird, ist offen (Issue #4). Das Glossar ist deutsch mit englischen Code-Namen und Aliasen und taugt für beide Fälle.
+- Die Oberfläche ist einsprachig Deutsch (ADR-02 in [Entscheidungen](../decisions.md)). UI-Texte nutzen den Glossarbegriff, also den Titel der Notiz; englische Aliase und Code-Namen stehen nur im Code.
 
 ## Bezüge
 

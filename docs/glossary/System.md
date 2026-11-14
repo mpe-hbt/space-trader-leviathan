@@ -2,6 +2,7 @@
 type: begriff
 aliases: ["Sternsystem"]
 code: ["System", "systemSymbol", "SystemType"]
+nicht-verwenden: ["Sonnensystem"]
 tags: [begriff]
 ---
 

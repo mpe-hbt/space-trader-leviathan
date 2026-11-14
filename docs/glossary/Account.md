@@ -2,6 +2,7 @@
 type: begriff
 aliases: ["Benutzerkonto"]
 code: ["AccountToken"]
+nicht-verwenden: ["Spielerkonto", "Login"]
 tags: [begriff]
 ---
 

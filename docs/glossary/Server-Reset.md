@@ -2,6 +2,7 @@
 type: begriff
 aliases: ["Reset", "Wipe"]
 code: ["serverResets", "resetDate"]
+nicht-verwenden: ["Saisonwechsel"]
 tags: [begriff]
 ---
 
