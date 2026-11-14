@@ -1,5 +1,4 @@
 import {
-  createSpaceTradersClient,
   SpaceTradersError,
   type components,
   type SpaceTradersClient,
@@ -17,9 +16,17 @@ import {
 import { parseSecretValue } from "./ipc-validation";
 import type { Logger } from "./logger";
 import type { EventSink, FileStore, SecretCipher } from "./ports";
+import type { RequestPriority } from "./request-queue";
 import { SAVE_FAILED_MESSAGE, type SecretStore } from "./secrets";
+import type { SpaceTradersService } from "./spacetraders";
 
 export const AGENTS_FILE = "agents.json";
+
+/** Vorrangstufe für Aufrufe, die der Spieler im Dialog „Agents“ auslöst. */
+export const AGENT_PRIORITY: RequestPriority = "user";
+
+/** Vorrangstufe für die Prüfung des aktiven Agents beim Start. */
+export const START_CHECK_PRIORITY: RequestPriority = "background";
 
 export const NO_ACCOUNT_TOKEN_MESSAGE = "Kein Account-Token hinterlegt.";
 export const REGISTERED_BUT_NOT_SAVED_MESSAGE = "Agent registriert, aber Speichern fehlgeschlagen.";
@@ -110,7 +117,7 @@ export class AgentService {
     private readonly files: FileStore,
     private readonly events: EventSink,
     private readonly logger: Logger,
-    private readonly fetchFn?: typeof fetch,
+    private readonly spaceTraders: SpaceTradersService,
   ) {}
 
   /** Loads the file; anything missing or broken counts as no agents. */
@@ -291,7 +298,7 @@ export class AgentService {
   }
 
   /** Checks one agent or, without a symbol, all agents one after another. */
-  async check(input?: unknown): Promise<AgentResult> {
+  async check(input?: unknown, priority: RequestPriority = AGENT_PRIORITY): Promise<AgentResult> {
     let targets: AgentEntry[];
     if (input === undefined) {
       targets = [...this.entries];
@@ -316,7 +323,8 @@ export class AgentService {
         continue;
       }
       try {
-        const agent = (await this.client({ agentToken: token }).agents.getMyAgent()).data;
+        const agent = (await this.client({ agentToken: token }, priority).agents.getMyAgent())
+          .data;
         entry.status = "valid";
         entry.credits = agent.credits;
         entry.headquarters = agent.headquarters;
@@ -337,18 +345,19 @@ export class AgentService {
   }
 
   /** Core-internal only: a client with the Agent-Token of the active agent. */
-  activeClient(): SpaceTradersClient | undefined {
+  activeClient(priority: RequestPriority): SpaceTradersClient | undefined {
     const entry = this.active === null ? undefined : this.find(this.active);
     if (!entry) return undefined;
     const token = this.decrypt(entry.cipherText, entry.symbol);
-    return token === undefined ? undefined : this.client({ agentToken: token });
+    return token === undefined ? undefined : this.client({ agentToken: token }, priority);
   }
 
-  private client(tokens: { agentToken?: string; accountToken?: string }): SpaceTradersClient {
-    return createSpaceTradersClient({
-      ...tokens,
-      ...(this.fetchFn ? { fetch: this.fetchFn } : {}),
-    });
+  /** Every request goes through the Request-Queue of the core. */
+  private client(
+    tokens: { agentToken?: string; accountToken?: string },
+    priority: RequestPriority = AGENT_PRIORITY,
+  ): SpaceTradersClient {
+    return this.spaceTraders.client(priority, tokens);
   }
 
   private parseRegisterInput(

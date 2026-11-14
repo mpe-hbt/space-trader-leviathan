@@ -69,6 +69,7 @@ describe("registerIpcHandlers", () => {
         IpcChannel.SelectAgent,
         IpcChannel.RemoveAgent,
         IpcChannel.CheckAgents,
+        IpcChannel.GetGameState,
       ].sort(),
     );
   });
@@ -115,6 +116,21 @@ describe("registerIpcHandlers", () => {
       ok: false,
       message: INVALID_INPUT_MESSAGE,
     });
+  });
+
+  it("returns the Spielstand to the own renderer and rejects a foreign sender", async () => {
+    const { invoke, handlers } = await setup();
+    await expect(invoke(IpcChannel.GetGameState)).resolves.toEqual({
+      resetDate: null,
+      nextReset: null,
+      agent: null,
+      ships: [],
+      contracts: [],
+    });
+    const handler = handlers.get(IpcChannel.GetGameState);
+    expect(() => handler?.({ senderFrame: { url: "https://evil.example/" } })).toThrow(
+      FOREIGN_SENDER_MESSAGE,
+    );
   });
 
   it("rejects calls from a foreign sender and logs a warning", async () => {

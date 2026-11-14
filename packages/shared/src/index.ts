@@ -1,3 +1,5 @@
+import type { components } from "@leviathan/api-client";
+
 export const APP_NAME = "space-trader-leviathan";
 
 export const IpcChannel = {
@@ -12,6 +14,7 @@ export const IpcChannel = {
   SelectAgent: "agents:select",
   RemoveAgent: "agents:remove",
   CheckAgents: "agents:check",
+  GetGameState: "game-state:get",
   CoreEvent: "core:event",
 } as const;
 
@@ -78,9 +81,32 @@ export type AgentResult = { ok: true; agents: AgentsStatus } | { ok: false; mess
 export type FactionsResult =
   { ok: true; factions: FactionOption[] } | { ok: false; message: string };
 
+/** Parts of the Spielstand a `game-state-changed` event can name. */
+export type GameStateArea =
+  | "reset"
+  | "agent"
+  | "ships"
+  | "systems"
+  | "waypoints"
+  | "markets"
+  | "shipyards"
+  | "contracts"
+  | "transactions";
+
+/** The Spielstand of the current Server-Reset as the renderer sees it. */
+export interface GameStateSnapshot {
+  resetDate: string | null;
+  nextReset: string | null;
+  agent: components["schemas"]["Agent"] | null;
+  ships: components["schemas"]["Ship"][];
+  contracts: components["schemas"]["Contract"][];
+}
+
 export type CoreEvent =
   | { type: "settings-changed"; settings: SettingsStatus }
   | { type: "routines-changed"; state: RoutineEngineState }
+  /** Names only the changed areas; the renderer fetches the data itself. */
+  | { type: "game-state-changed"; resetDate: string; areas: GameStateArea[] }
   | { type: "agents-changed"; agents: AgentsStatus };
 
 export interface LeviathanApi {
@@ -95,6 +121,7 @@ export interface LeviathanApi {
   selectAgent(symbol: string): Promise<AgentResult>;
   removeAgent(symbol: string): Promise<AgentResult>;
   checkAgents(symbol?: string): Promise<AgentResult>;
+  getGameState(): Promise<GameStateSnapshot>;
   onCoreEvent(listener: (event: CoreEvent) => void): () => void;
 }
 

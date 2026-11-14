@@ -6,6 +6,7 @@ import {
   type AppInfo,
   type CoreEvent,
   type FactionsResult,
+  type GameStateSnapshot,
   type LeviathanApi,
   type SaveResult,
   type SettingsStatus,
@@ -29,6 +30,7 @@ const api: LeviathanApi = {
     ipcRenderer.invoke(IpcChannel.RemoveAgent, symbol) as Promise<AgentResult>,
   checkAgents: (symbol) =>
     ipcRenderer.invoke(IpcChannel.CheckAgents, symbol) as Promise<AgentResult>,
+  getGameState: () => ipcRenderer.invoke(IpcChannel.GetGameState) as Promise<GameStateSnapshot>,
   onCoreEvent(listener) {
     // Pass only the payload; the IpcRendererEvent never reaches the renderer.
     const wrapped = (_event: IpcRendererEvent, payload: CoreEvent) => listener(payload);

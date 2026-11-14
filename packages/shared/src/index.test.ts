@@ -15,6 +15,7 @@ describe("shared", () => {
     expect(IpcChannel.SetSecret).toBe("settings:set-secret");
     expect(IpcChannel.ClearSecret).toBe("settings:clear-secret");
     expect(IpcChannel.CoreEvent).toBe("core:event");
+    expect(IpcChannel.GetGameState).toBe("game-state:get");
   });
 
   it("names the IPC channels for agents", () => {

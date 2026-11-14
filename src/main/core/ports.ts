@@ -23,8 +23,26 @@ export interface EventSink {
   send(event: CoreEvent): void;
 }
 
+export type SqlValue = string | number | bigint | null | Uint8Array;
+
+/** Narrow SQLite access; the adapter in src/main/adapters/sqlite.ts implements it. */
+export interface SqlDatabase {
+  exec(sql: string): void;
+  run(sql: string, params?: SqlValue[]): void;
+  get<T>(sql: string, params?: SqlValue[]): T | undefined;
+  all<T>(sql: string, params?: SqlValue[]): T[];
+  /** Runs `fn` in one transaction; rolls back if it throws. */
+  transaction<T>(fn: () => T): T;
+  close(): void;
+}
+
+/** Transport of the Request-Queue: every SpaceTraders request of the core ends up here (#6). */
+export type FetchFunction = typeof fetch;
+
 export interface CorePorts {
   cipher: SecretCipher;
   files: FileStore;
   events: EventSink;
+  database: SqlDatabase;
+  fetch: FetchFunction;
 }

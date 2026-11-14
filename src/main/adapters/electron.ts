@@ -3,6 +3,7 @@ import { dirname, isAbsolute, join, normalize } from "node:path";
 import { app, safeStorage, type BrowserWindow } from "electron";
 import { IpcChannel } from "@leviathan/shared";
 import type { CorePorts, EventSink, FileStore, SecretCipher } from "../core";
+import { openSqliteDatabase } from "./sqlite";
 
 /** Thin layer between the core and Electron; contains no logic of its own. */
 export function createElectronPorts(getWindow: () => BrowserWindow | null): CorePorts {
@@ -10,6 +11,9 @@ export function createElectronPorts(getWindow: () => BrowserWindow | null): Core
     cipher: createSafeStorageCipher(),
     files: createUserDataFileStore(app.getPath("userData")),
     events: createWebContentsSink(getWindow),
+    database: openSqliteDatabase(join(app.getPath("userData"), "leviathan.db")),
+    // The only place that uses the global fetch; the core goes through this port.
+    fetch: (input, init) => globalThis.fetch(input, init),
   };
 }
 

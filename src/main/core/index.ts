@@ -1,16 +1,26 @@
-import { AgentService } from "./agents";
+import { AgentService, START_CHECK_PRIORITY } from "./agents";
 import { BoardComputerService } from "./board-computer";
 import { CacheService } from "./cache";
 import { GitHubService } from "./github";
 import { createLogger, type Logger } from "./logger";
 import type { CorePorts } from "./ports";
+import { RequestQueue } from "./request-queue";
 import { RoutineEngine } from "./routines";
 import { SecretStore } from "./secrets";
 import { SettingsService } from "./settings";
 import { SpaceTradersService } from "./spacetraders";
 
-export type { CorePorts, EventSink, FileStore, SecretCipher } from "./ports";
+export type {
+  CorePorts,
+  EventSink,
+  FetchFunction,
+  FileStore,
+  SecretCipher,
+  SqlDatabase,
+  SqlValue,
+} from "./ports";
 export type { Logger } from "./logger";
+export type { RequestPriority, RequestQueue, RequestQueueMetrics } from "./request-queue";
 
 export const SHUTDOWN_TIMEOUT_MS = 3000;
 
@@ -19,8 +29,6 @@ const SCOPE = "core";
 export interface CoreOptions {
   clock?: () => Date;
   shutdownTimeoutMs?: number;
-  /** fetch for all SpaceTraders calls of the core; the Request-Queue (#6) hooks in here. */
-  fetch?: typeof fetch;
 }
 
 export interface Core {
@@ -31,6 +39,7 @@ export interface Core {
   boardComputer: BoardComputerService;
   gitHub: GitHubService;
   spaceTraders: SpaceTradersService;
+  requestQueue: RequestQueue;
   cache: CacheService;
   logger: Logger;
   start(): Promise<void>;
@@ -42,23 +51,32 @@ export function createCore(ports: CorePorts, options: CoreOptions = {}): Core {
   const logger = createLogger(ports.files, options.clock);
   const secrets = new SecretStore(ports.cipher, ports.files, logger);
   const settings = new SettingsService(secrets, ports.events, logger);
+  const routines = new RoutineEngine(ports.files, ports.events, logger);
+  const boardComputer = new BoardComputerService(secrets);
+  const gitHub = new GitHubService(secrets);
+  // The fetch port is the Request-Queue's transport; every SpaceTraders request goes through it.
+  const requestQueue = new RequestQueue({ transport: ports.fetch, logger });
+  const spaceTraders = new SpaceTradersService(requestQueue);
   const agents = new AgentService(
     secrets,
     ports.cipher,
     ports.files,
     ports.events,
     logger,
-    options.fetch,
+    spaceTraders,
   );
-  const routines = new RoutineEngine(ports.files, ports.events, logger);
-  const boardComputer = new BoardComputerService(secrets);
-  const gitHub = new GitHubService(secrets);
-  const spaceTraders = new SpaceTradersService();
-  const cache = new CacheService();
+  const cache = new CacheService({
+    database: ports.database,
+    spaceTraders,
+    events: ports.events,
+    logger,
+    clock: options.clock,
+  });
   const timeoutMs = options.shutdownTimeoutMs ?? SHUTDOWN_TIMEOUT_MS;
 
   async function stopAll(): Promise<void> {
     await routines.pauseAll();
+    requestQueue.stop();
     cache.stop();
     logger.info(SCOPE, "Kern beendet");
     await logger.flush();
@@ -72,6 +90,7 @@ export function createCore(ports: CorePorts, options: CoreOptions = {}): Core {
     boardComputer,
     gitHub,
     spaceTraders,
+    requestQueue,
     cache,
     logger,
     async start() {
@@ -80,11 +99,13 @@ export function createCore(ports: CorePorts, options: CoreOptions = {}): Core {
       await agents.load();
       const active = agents.status().active;
       if (active !== null) {
-        void agents.check(active).catch((error: unknown) => {
+        void agents.check(active, START_CHECK_PRIORITY).catch((error: unknown) => {
           logger.error(SCOPE, "Prüfung des aktiven Agents fehlgeschlagen", error);
         });
       }
       cache.start();
+      // Do not wait for the network; the stored Spielstand is available immediately.
+      void cache.checkReset();
       await routines.start();
       logger.info(SCOPE, "Kern gestartet", {
         encryptionAvailable: secrets.status().encryptionAvailable,

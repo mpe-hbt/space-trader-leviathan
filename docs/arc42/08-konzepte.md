@@ -22,7 +22,7 @@ Sieben Konzepte ziehen sich durch den ganzen Client: eine gemeinsame [Request-Qu
 
 ## Cache und Datenaktualität
 
-- SQLite hält den Spielzustand je [Server-Reset](../spacetraders/server-reset.md).
+- SQLite hält den Spielstand je [Server-Reset](../spacetraders/server-reset.md).
 - Antworten auf Aktionen werden direkt übernommen (sie enthalten `nav`, `fuel`, `cargo`, `agent` usw.), statt neu abzufragen.
 - Marktpreise sind Zeitreihen mit Zeitstempel; jede Anzeige nennt das Alter der Daten.
 - Systeme und Wegpunkte werden einmal je Reset und nur bei Bedarf geladen.

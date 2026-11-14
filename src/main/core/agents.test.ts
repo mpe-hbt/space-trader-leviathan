@@ -65,6 +65,10 @@ function fakeFetch(route: Route) {
   const calls: Call[] = [];
   const fn: typeof fetch = async (input, init) => {
     const request = new Request(input, init);
+    // The Spielstand-Cache checks GET / for a reset on start; that call is not the agents' business.
+    if (new URL(request.url).pathname.replace("/v2", "") === "/") {
+      throw new TypeError("fetch failed");
+    }
     const call = {
       method: request.method,
       path: new URL(request.url).pathname.replace("/v2", "") + new URL(request.url).search,
@@ -79,7 +83,7 @@ function fakeFetch(route: Route) {
 
 async function setup(route: Route, ports = fakePorts()) {
   const fetch = fakeFetch(route);
-  const core = createCore(ports, { fetch: fetch.fn });
+  const core = createCore({ ...ports, fetch: fetch.fn });
   await core.start();
   return { ports, core, calls: fetch.calls };
 }
@@ -156,13 +160,13 @@ describe("AgentService.register", () => {
     ]);
     await expectNoToken(ports, core, result);
 
-    const restarted = createCore(ports, { fetch: fakeFetch(registerRoute).fn });
+    const restarted = createCore({ ...ports, fetch: fakeFetch(registerRoute).fn });
     await restarted.start();
     expect(restarted.agents.status()).toMatchObject({
       active: "LEVI",
       agents: [{ symbol: "LEVI" }],
     });
-    expect(restarted.agents.activeClient()).toBeDefined();
+    expect(restarted.agents.activeClient("user")).toBeDefined();
   });
 
   it("uses the stored Account-Token when none is entered", async () => {
@@ -311,7 +315,7 @@ describe("AgentService select and remove", () => {
     });
     expect(ports.events.events).toEqual([{ type: "agents-changed", agents: core.agents.status() }]);
     expect(ports.files.files.get(AGENTS_FILE)).not.toContain("NAUTILUS");
-    expect(core.agents.activeClient()).toBeUndefined();
+    expect(core.agents.activeClient("user")).toBeUndefined();
     await expectNoToken(ports, core, result);
   });
 
@@ -457,11 +461,11 @@ describe("AgentService.factions", () => {
   it("does not cache an error", async () => {
     let fail = true;
     const { core, calls } = await setup(() =>
-      fail ? apiError(429, 429) : json(200, { data: [], meta: { total: 0, page: 1, limit: 20 } }),
+      fail ? apiError(400, 4000) : json(200, { data: [], meta: { total: 0, page: 1, limit: 20 } }),
     );
     expect(await core.agents.factions()).toEqual({
       ok: false,
-      message: TOO_MANY_REQUESTS_MESSAGE,
+      message: "SpaceTraders hat die Anfrage abgelehnt (Code 4000).",
     });
     fail = false;
     expect(await core.agents.factions()).toEqual({ ok: true, factions: [] });
