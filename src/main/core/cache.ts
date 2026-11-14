@@ -3,6 +3,7 @@ import type { GameStateArea, GameStateSnapshot } from "@leviathan/shared";
 import { migrate } from "./cache-schema";
 import type { Logger } from "./logger";
 import type { EventSink, SqlDatabase, SqlValue } from "./ports";
+import type { RequestPriority } from "./request-queue";
 import type { SpaceTradersService } from "./spacetraders";
 
 type Schemas = components["schemas"];
@@ -20,6 +21,12 @@ export const RESET_CHECK_INTERVAL_MS = 30 * 60 * 1000;
 
 /** Page size for loading the waypoints of a system. */
 export const WAYPOINT_PAGE_LIMIT = 20;
+
+/** Vorrangstufe der Reset-Prüfung in der Request-Queue: läuft im Hintergrund. */
+export const RESET_CHECK_PRIORITY: RequestPriority = "background";
+
+/** Vorrangstufe für das Laden von Systemen und Wegpunkten bei Bedarf. */
+export const LOAD_PRIORITY: RequestPriority = "routine";
 
 const SCOPE = "cache";
 
@@ -124,7 +131,7 @@ export class CacheService {
     const generation = this.generation;
     let status;
     try {
-      status = await this.deps.spaceTraders.client.global.getStatus();
+      status = await this.deps.spaceTraders.client(RESET_CHECK_PRIORITY).global.getStatus();
     } catch (error) {
       if (generation === this.generation) {
         this.deps.logger.warn(SCOPE, "Reset-Prüfung fehlgeschlagen", error);
@@ -212,7 +219,7 @@ export class CacheService {
     if (row) return JSON.parse(row.data) as System;
 
     const generation = this.generation;
-    const { data: system } = await this.deps.spaceTraders.client.systems.getSystem({
+    const { data: system } = await this.deps.spaceTraders.client(LOAD_PRIORITY).systems.getSystem({
       systemSymbol,
     });
     if (!this.isCurrent(generation, resetDate)) return system;
@@ -250,10 +257,9 @@ export class CacheService {
     const generation = this.generation;
     const waypoints: Waypoint[] = [];
     for (let page = 1; ; page += 1) {
-      const response = await this.deps.spaceTraders.client.systems.getSystemWaypoints(
-        { systemSymbol },
-        { page, limit: WAYPOINT_PAGE_LIMIT },
-      );
+      const response = await this.deps.spaceTraders
+        .client(LOAD_PRIORITY)
+        .systems.getSystemWaypoints({ systemSymbol }, { page, limit: WAYPOINT_PAGE_LIMIT });
       waypoints.push(...response.data);
       if (response.data.length === 0 || waypoints.length >= response.meta.total) break;
     }

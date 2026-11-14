@@ -98,7 +98,7 @@ Each decision is a section `## ADR-nn: Title` with **Status**, **Context**, **De
   - **Reset-Prüfung:** `GET /` beim Start und danach alle 30 Minuten; ein neues `resetDate` beginnt einen neuen Spielstand.
   - **Datenmodell:** Agent, Schiffe, Systeme, Wegpunkte, Märkte mit Preis-Zeitreihe, Werften, Aufträge und [Transaktionen](glossary/Transaktion.md); Systeme und Wegpunkte werden je Reset nur einmal geladen.
   - **Ereignisse:** `game-state-changed` nennt nur das Reset-Datum und die geänderten Bereiche; der Renderer holt die Daten bei Bedarf.
-  - **Anfragen:** Alle SpaceTraders-Anfragen des Kerns laufen über den Port `fetch`, in den sich die Request-Queue (#6) einhängt.
+  - **Anfragen:** Alle SpaceTraders-Anfragen des Kerns laufen über die Request-Queue (#6); der Port `fetch` ist ihr Transport.
 - **Konsequenzen:**
   - `node:sqlite` ist noch als experimentell markiert; die Prüfung unter Electron 45 erfolgt durch den Owner.
   - Die Datei wächst ohne Aufräumen alter Spielstände; das Aufräumen ist eine spätere Entscheidung.

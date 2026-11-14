@@ -36,7 +36,7 @@ export interface SqlDatabase {
   close(): void;
 }
 
-/** All SpaceTraders requests of the core go through this function; the Request-Queue hooks in here (#6). */
+/** Transport of the Request-Queue: every SpaceTraders request of the core ends up here (#6). */
 export type FetchFunction = typeof fetch;
 
 export interface CorePorts {
