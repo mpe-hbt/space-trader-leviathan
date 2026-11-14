@@ -8,7 +8,8 @@ async function restrictedImports(filePath: string, code: string): Promise<number
   return result?.messages.filter((m) => m.ruleId === "no-restricted-imports").length ?? 0;
 }
 
-describe("import boundaries", () => {
+// The first lintText loads the whole ESLint config, which takes over 5 s on Windows CI runners.
+describe("import boundaries", { timeout: 30_000 }, () => {
   it("forbids electron in the core", async () => {
     expect(
       await restrictedImports("src/main/core/x.ts", 'import { app } from "electron";\nvoid app;\n'),
