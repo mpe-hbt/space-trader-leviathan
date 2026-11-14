@@ -3,7 +3,7 @@ title: Entscheidungen
 summary: Register der Architekturentscheidungen (ADRs) des Clients.
 audience: [tech]
 owner: Architektur
-reviewed: 2026-11-13
+reviewed: 2026-11-14
 ---
 
 # Decisions
@@ -31,3 +31,16 @@ Each decision is a section `## ADR-nn: Title` with **Status**, **Context**, **De
   - Größere Installationsdatei (ca. 100 MB) und mehr Arbeitsspeicher als bei Tauri.
   - Electron-Sicherheitsrichtlinien sind Pflicht: keine Remote-Inhalte im Renderer, strikte CSP, IPC-Eingaben prüfen.
   - Ein späterer Web- oder Server-Betrieb bleibt möglich, weil der Kern keine Electron-APIs außerhalb einer dünnen Adapterschicht nutzt.
+
+## ADR-02: Oberfläche einsprachig Deutsch
+
+- **Status:** gilt (#4)
+- **Kontext:** Das Glossar ist deutsch, mit englischen Code-Namen und Aliasen aus der SpaceTraders-API. Issue #4 hat offen gelassen, ob die Oberfläche deutsch, englisch oder zweisprachig wird. Bevor die ersten fachlichen UI-Texte entstehen, braucht es dazu eine feste Regel.
+- **Entscheidung:** Die Oberfläche ist einsprachig Deutsch.
+  - **UI-Texte:** Alle Texte der Oberfläche sind deutsch und nutzen den Glossarbegriff, also den Titel der Notiz in `docs/glossary/`, nicht den englischen Alias (zum Beispiel „Schiff“, nicht „Ship“).
+  - **Code:** Englische API-Namen stehen nur im Code; die Notiz nennt sie unter „code“.
+  - **Kein i18n-Framework:** Es gibt keine Übersetzungsschicht. `lang="de"` in `src/renderer/index.html` bleibt.
+- **Konsequenzen:**
+  - Keine Übersetzungsdateien und kein Sprachumschalter.
+  - Eine englische Oberfläche gibt es später nur mit einer neuen ADR, die diese ablöst.
+  - Das Glossar bleibt die Quelle der Wörter in der Oberfläche; ein neuer Begriff kommt zuerst ins Glossar, dann in die UI.

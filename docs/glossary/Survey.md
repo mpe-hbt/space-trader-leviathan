@@ -2,6 +2,7 @@
 type: begriff
 aliases: ["Vermessung"]
 code: ["Survey", "/survey", "/extract/survey", "SurveyDeposit"]
+nicht-verwenden: ["Prospektion"]
 tags: [begriff]
 ---
 

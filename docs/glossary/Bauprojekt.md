@@ -2,6 +2,7 @@
 type: begriff
 aliases: ["Construction"]
 code: ["Construction", "/construction", "/construction/supply", "isUnderConstruction"]
+nicht-verwenden: ["Baustelle"]
 tags: [begriff]
 ---
 
