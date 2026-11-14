@@ -5,6 +5,13 @@ export const IpcChannel = {
   GetSettings: "settings:get",
   SetSecret: "settings:set-secret",
   ClearSecret: "settings:clear-secret",
+  GetAgents: "agents:get",
+  GetFactions: "agents:get-factions",
+  RegisterAgent: "agents:register",
+  ImportAgentToken: "agents:import-token",
+  SelectAgent: "agents:select",
+  RemoveAgent: "agents:remove",
+  CheckAgents: "agents:check",
   CoreEvent: "core:event",
 } as const;
 
@@ -15,10 +22,14 @@ export interface AppInfo {
   version: string;
 }
 
-/** Names of the secrets the core keeps. #7 adds Agent-Token and Account-Token. */
-export type SecretName = "anthropicApiKey" | "githubToken";
+/** Names of the fixed secrets the core keeps. Agent-Tokens live in `agents.json` (#7). */
+export type SecretName = "anthropicApiKey" | "githubToken" | "accountToken";
 
-export const SECRET_NAMES: readonly SecretName[] = ["anthropicApiKey", "githubToken"];
+export const SECRET_NAMES: readonly SecretName[] = [
+  "anthropicApiKey",
+  "githubToken",
+  "accountToken",
+];
 
 export interface SettingsStatus {
   encryptionAvailable: boolean;
@@ -29,15 +40,61 @@ export type SaveResult = { ok: true; settings: SettingsStatus } | { ok: false; m
 
 export type RoutineEngineState = "running" | "paused";
 
+/** State of an Agent-Token as last seen by the core. */
+export type AgentTokenStatus = "valid" | "expired" | "unchecked";
+
+/** What the renderer learns about an agent; never contains a token. */
+export interface AgentSummary {
+  symbol: string;
+  faction: string;
+  headquarters: string;
+  credits: number;
+  status: AgentTokenStatus;
+}
+
+export interface AgentsStatus {
+  encryptionAvailable: boolean;
+  accountTokenConfigured: boolean;
+  active: string | null;
+  agents: AgentSummary[];
+}
+
+export interface FactionOption {
+  symbol: string;
+  name: string;
+  headquarters: string;
+  isRecruiting: boolean;
+}
+
+export interface RegisterAgentInput {
+  symbol: string;
+  faction: string;
+  /** Optional; without it the stored Account-Token is used. */
+  accountToken?: string;
+}
+
+export type AgentResult = { ok: true; agents: AgentsStatus } | { ok: false; message: string };
+
+export type FactionsResult =
+  { ok: true; factions: FactionOption[] } | { ok: false; message: string };
+
 export type CoreEvent =
   | { type: "settings-changed"; settings: SettingsStatus }
-  | { type: "routines-changed"; state: RoutineEngineState };
+  | { type: "routines-changed"; state: RoutineEngineState }
+  | { type: "agents-changed"; agents: AgentsStatus };
 
 export interface LeviathanApi {
   getAppInfo(): Promise<AppInfo>;
   getSettings(): Promise<SettingsStatus>;
   setSecret(name: SecretName, value: string): Promise<SaveResult>;
   clearSecret(name: SecretName): Promise<SaveResult>;
+  getAgents(): Promise<AgentsStatus>;
+  getFactions(): Promise<FactionsResult>;
+  registerAgent(input: RegisterAgentInput): Promise<AgentResult>;
+  importAgentToken(token: string): Promise<AgentResult>;
+  selectAgent(symbol: string): Promise<AgentResult>;
+  removeAgent(symbol: string): Promise<AgentResult>;
+  checkAgents(symbol?: string): Promise<AgentResult>;
   onCoreEvent(listener: (event: CoreEvent) => void): () => void;
 }
 

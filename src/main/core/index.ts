@@ -1,3 +1,4 @@
+import { AgentService } from "./agents";
 import { BoardComputerService } from "./board-computer";
 import { CacheService } from "./cache";
 import { GitHubService } from "./github";
@@ -18,11 +19,14 @@ const SCOPE = "core";
 export interface CoreOptions {
   clock?: () => Date;
   shutdownTimeoutMs?: number;
+  /** fetch for all SpaceTraders calls of the core; the Request-Queue (#6) hooks in here. */
+  fetch?: typeof fetch;
 }
 
 export interface Core {
   settings: SettingsService;
   secrets: SecretStore;
+  agents: AgentService;
   routines: RoutineEngine;
   boardComputer: BoardComputerService;
   gitHub: GitHubService;
@@ -38,6 +42,14 @@ export function createCore(ports: CorePorts, options: CoreOptions = {}): Core {
   const logger = createLogger(ports.files, options.clock);
   const secrets = new SecretStore(ports.cipher, ports.files, logger);
   const settings = new SettingsService(secrets, ports.events, logger);
+  const agents = new AgentService(
+    secrets,
+    ports.cipher,
+    ports.files,
+    ports.events,
+    logger,
+    options.fetch,
+  );
   const routines = new RoutineEngine(ports.files, ports.events, logger);
   const boardComputer = new BoardComputerService(secrets);
   const gitHub = new GitHubService(secrets);
@@ -55,6 +67,7 @@ export function createCore(ports: CorePorts, options: CoreOptions = {}): Core {
   return {
     settings,
     secrets,
+    agents,
     routines,
     boardComputer,
     gitHub,
@@ -64,6 +77,13 @@ export function createCore(ports: CorePorts, options: CoreOptions = {}): Core {
     async start() {
       logger.info(SCOPE, "Kern startet");
       await secrets.load();
+      await agents.load();
+      const active = agents.status().active;
+      if (active !== null) {
+        void agents.check(active).catch((error: unknown) => {
+          logger.error(SCOPE, "Prüfung des aktiven Agents fehlgeschlagen", error);
+        });
+      }
       cache.start();
       await routines.start();
       logger.info(SCOPE, "Kern gestartet", {

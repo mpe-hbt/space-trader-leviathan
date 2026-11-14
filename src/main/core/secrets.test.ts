@@ -21,7 +21,11 @@ describe("SecretStore", () => {
       ok: true,
       settings: {
         encryptionAvailable: true,
-        secrets: { anthropicApiKey: { configured: true }, githubToken: { configured: false } },
+        secrets: {
+          anthropicApiKey: { configured: true },
+          githubToken: { configured: false },
+          accountToken: { configured: false },
+        },
       },
     });
     const file = files.files.get(SECRETS_FILE) ?? "";
@@ -70,6 +74,7 @@ describe("SecretStore", () => {
     expect(store.status().secrets).toEqual({
       anthropicApiKey: { configured: false },
       githubToken: { configured: false },
+      accountToken: { configured: false },
     });
     await logger.flush();
     expect(files.files.get(LOG_FILE)).toContain('"level":"warn"');

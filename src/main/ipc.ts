@@ -37,7 +37,7 @@ export function isAllowedSender(
 }
 
 export interface IpcDependencies {
-  core: Pick<Core, "settings" | "logger">;
+  core: Pick<Core, "settings" | "agents" | "logger">;
   appInfo: () => AppInfo;
   allowedRendererUrl: string;
 }
@@ -51,6 +51,13 @@ export function registerIpcHandlers(handle: HandleFunction, deps: IpcDependencie
     [IpcChannel.GetSettings]: () => core.settings.status(),
     [IpcChannel.SetSecret]: (name, value) => core.settings.setSecret(name, value),
     [IpcChannel.ClearSecret]: (name) => core.settings.clearSecret(name),
+    [IpcChannel.GetAgents]: () => core.agents.status(),
+    [IpcChannel.GetFactions]: () => core.agents.factions(),
+    [IpcChannel.RegisterAgent]: (input) => core.agents.register(input),
+    [IpcChannel.ImportAgentToken]: (token) => core.agents.importToken(token),
+    [IpcChannel.SelectAgent]: (symbol) => core.agents.select(symbol),
+    [IpcChannel.RemoveAgent]: (symbol) => core.agents.remove(symbol),
+    [IpcChannel.CheckAgents]: (symbol) => core.agents.check(symbol),
     // Main → renderer only; no handler.
     [IpcChannel.CoreEvent]: undefined,
   };

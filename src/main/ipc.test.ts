@@ -62,6 +62,13 @@ describe("registerIpcHandlers", () => {
         IpcChannel.GetSettings,
         IpcChannel.SetSecret,
         IpcChannel.ClearSecret,
+        IpcChannel.GetAgents,
+        IpcChannel.GetFactions,
+        IpcChannel.RegisterAgent,
+        IpcChannel.ImportAgentToken,
+        IpcChannel.SelectAgent,
+        IpcChannel.RemoveAgent,
+        IpcChannel.CheckAgents,
       ].sort(),
     );
   });
@@ -119,5 +126,39 @@ describe("registerIpcHandlers", () => {
     expect(() => handler?.({ senderFrame: null })).toThrow(FOREIGN_SENDER_MESSAGE);
     await core.logger.flush();
     expect(ports.files.files.get(LOG_FILE)).toContain("fremden Absenders");
+  });
+
+  it.each([
+    IpcChannel.GetAgents,
+    IpcChannel.GetFactions,
+    IpcChannel.RegisterAgent,
+    IpcChannel.ImportAgentToken,
+    IpcChannel.SelectAgent,
+    IpcChannel.RemoveAgent,
+    IpcChannel.CheckAgents,
+  ])("rejects a foreign sender on %s", async (channel) => {
+    const { handlers } = await setup();
+    const handler = handlers.get(channel);
+    expect(() => handler?.({ senderFrame: { url: "https://evil.example/" } })).toThrow(
+      FOREIGN_SENDER_MESSAGE,
+    );
+  });
+
+  it("answers agent calls without token", async () => {
+    const { invoke } = await setup();
+    await expect(invoke(IpcChannel.GetAgents)).resolves.toEqual({
+      encryptionAvailable: true,
+      accountTokenConfigured: false,
+      active: null,
+      agents: [],
+    });
+    await expect(invoke(IpcChannel.SelectAgent, "UNKNOWN")).resolves.toEqual({
+      ok: false,
+      message: INVALID_INPUT_MESSAGE,
+    });
+    await expect(invoke(IpcChannel.ImportAgentToken, 5)).resolves.toEqual({
+      ok: false,
+      message: INVALID_INPUT_MESSAGE,
+    });
   });
 });

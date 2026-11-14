@@ -10,6 +10,7 @@ import { LOAD_FAILED_MESSAGE, SAVE_FAILED_MESSAGE, settingsMessages } from "./me
 const LABELS: Record<SecretName, string> = {
   anthropicApiKey: "Anthropic-API-Key",
   githubToken: "GitHub-Token",
+  accountToken: "Account-Token",
 };
 
 interface SettingsDialogProps {
