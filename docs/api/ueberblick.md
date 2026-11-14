@@ -4,7 +4,7 @@ summary: Die SpaceTraders-API ist eine REST-API mit OpenAPI-Spezifikation, aus d
 audience: [tech]
 tags: [api]
 owner: Entwicklung
-reviewed: 2026-11-13
+reviewed: 2026-11-14
 ---
 
 # API-Überblick
@@ -38,7 +38,11 @@ Die Schiffsaktionen unter `/my/ships/{shipSymbol}/` sind: `orbit`, `dock`, `navi
 ## Client erzeugen
 
 - Quelle: Repository https://github.com/SpaceTradersAPI/api-docs (`reference/SpaceTraders.json` und `models/`). Für Generatoren eignet sich die gebündelte Datei https://spacetraders.io/SpaceTraders.json, in der alle `$ref` aufgelöst sind.
-- Der Client pinnt eine Version der Spezifikation und prüft in der CI, ob der erzeugte Code dazu passt (Issue #5).
+- Die Spezifikation ist unter `packages/api-client/spec/SpaceTraders.json` gepinnt (Version 2.3.0, festgehalten in `SPACETRADERS_SPEC_VERSION`). `npm run api:update-spec` lädt die gebündelte Datei neu herunter (braucht Netz); danach `SPACETRADERS_SPEC_VERSION` anpassen und das Ergebnis prüfen.
+- `npm run api:generate` erzeugt daraus die Typen in `packages/api-client/src/generated/schema.d.ts` (mit `openapi-typescript`, offline). Die Datei liegt im Repository und wird nicht von Hand geändert.
+- `npm test` prüft, dass die erzeugten Typen zur gepinnten Spezifikation passen und die Versionen übereinstimmen (einzeln: `npm run api:check`). Weil die CI die Tests ausführt, schlägt sie bei einer Abweichung fehl.
+- `createSpaceTradersClient` (auf Basis von `openapi-fetch`) bietet je Tag eine Fassade (`global`, `agents`, `fleet`, `systems`, `contracts`, `factions`, `data`); die Methoden heißen wie die `operationId` in camelCase, z. B. `fleet.navigateShip`. Bei Erfolg liefern sie den ganzen Body mit `data` und `meta`, bei einer Fehlerantwort werfen sie einen `SpaceTradersError` mit `status`, `code`, `message` und `data`. `register` nutzt den Account-Token, alle anderen Endpunkte den Agent-Token.
+- Der Client wird nur im Kern über die [Request-Queue](../glossary/Request-Queue.md) genutzt; niemand ruft die API direkt auf (#6).
 
 ## Für die Technik
 

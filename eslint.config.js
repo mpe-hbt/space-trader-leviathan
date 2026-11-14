@@ -6,7 +6,7 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist/", "out/", "node_modules/"] },
+  { ignores: ["dist/", "out/", "node_modules/", "packages/api-client/src/generated/"] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
@@ -61,6 +61,10 @@ export default tseslint.config(
         },
       ],
     },
+  },
+  {
+    files: ["packages/api-client/scripts/**/*.mjs"],
+    languageOptions: { globals: globals.node },
   },
   prettier,
 );
