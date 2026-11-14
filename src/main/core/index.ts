@@ -3,6 +3,7 @@ import { CacheService } from "./cache";
 import { GitHubService } from "./github";
 import { createLogger, type Logger } from "./logger";
 import type { CorePorts } from "./ports";
+import { RequestQueue } from "./request-queue";
 import { RoutineEngine } from "./routines";
 import { SecretStore } from "./secrets";
 import { SettingsService } from "./settings";
@@ -10,6 +11,7 @@ import { SpaceTradersService } from "./spacetraders";
 
 export type { CorePorts, EventSink, FileStore, SecretCipher } from "./ports";
 export type { Logger } from "./logger";
+export type { RequestPriority, RequestQueue, RequestQueueMetrics } from "./request-queue";
 
 export const SHUTDOWN_TIMEOUT_MS = 3000;
 
@@ -27,6 +29,7 @@ export interface Core {
   boardComputer: BoardComputerService;
   gitHub: GitHubService;
   spaceTraders: SpaceTradersService;
+  requestQueue: RequestQueue;
   cache: CacheService;
   logger: Logger;
   start(): Promise<void>;
@@ -41,12 +44,14 @@ export function createCore(ports: CorePorts, options: CoreOptions = {}): Core {
   const routines = new RoutineEngine(ports.files, ports.events, logger);
   const boardComputer = new BoardComputerService(secrets);
   const gitHub = new GitHubService(secrets);
-  const spaceTraders = new SpaceTradersService();
+  const requestQueue = new RequestQueue({ logger });
+  const spaceTraders = new SpaceTradersService(requestQueue);
   const cache = new CacheService();
   const timeoutMs = options.shutdownTimeoutMs ?? SHUTDOWN_TIMEOUT_MS;
 
   async function stopAll(): Promise<void> {
     await routines.pauseAll();
+    requestQueue.stop();
     cache.stop();
     logger.info(SCOPE, "Kern beendet");
     await logger.flush();
@@ -59,6 +64,7 @@ export function createCore(ports: CorePorts, options: CoreOptions = {}): Core {
     boardComputer,
     gitHub,
     spaceTraders,
+    requestQueue,
     cache,
     logger,
     async start() {
