@@ -74,11 +74,10 @@ describe("createCore", () => {
   });
 
   it("exposes the request queue and sends SpaceTraders requests through it", async () => {
-    const transport = vi.fn<typeof fetch>(async () =>
-      Response.json({ status: "ok" }, { status: 200 }),
-    );
-    vi.stubGlobal("fetch", transport);
-    const core = createCore(fakePorts());
+    const ports = fakePorts();
+    ports.fetch.respond("/", { status: "ok" });
+    const transport = vi.fn<typeof fetch>(ports.fetch);
+    const core = createCore({ ...ports, fetch: transport });
     expect(core.requestQueue).toBeInstanceOf(RequestQueue);
     const fetchSpy = vi.spyOn(core.requestQueue, "fetch");
 

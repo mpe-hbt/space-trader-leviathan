@@ -9,7 +9,15 @@ import { SecretStore } from "./secrets";
 import { SettingsService } from "./settings";
 import { SpaceTradersService } from "./spacetraders";
 
-export type { CorePorts, EventSink, FileStore, SecretCipher } from "./ports";
+export type {
+  CorePorts,
+  EventSink,
+  FetchFunction,
+  FileStore,
+  SecretCipher,
+  SqlDatabase,
+  SqlValue,
+} from "./ports";
 export type { Logger } from "./logger";
 export type { RequestPriority, RequestQueue, RequestQueueMetrics } from "./request-queue";
 
@@ -44,9 +52,16 @@ export function createCore(ports: CorePorts, options: CoreOptions = {}): Core {
   const routines = new RoutineEngine(ports.files, ports.events, logger);
   const boardComputer = new BoardComputerService(secrets);
   const gitHub = new GitHubService(secrets);
-  const requestQueue = new RequestQueue({ logger });
+  // The fetch port is the Request-Queue's transport; every SpaceTraders request goes through it.
+  const requestQueue = new RequestQueue({ transport: ports.fetch, logger });
   const spaceTraders = new SpaceTradersService(requestQueue);
-  const cache = new CacheService();
+  const cache = new CacheService({
+    database: ports.database,
+    spaceTraders,
+    events: ports.events,
+    logger,
+    clock: options.clock,
+  });
   const timeoutMs = options.shutdownTimeoutMs ?? SHUTDOWN_TIMEOUT_MS;
 
   async function stopAll(): Promise<void> {
@@ -71,6 +86,8 @@ export function createCore(ports: CorePorts, options: CoreOptions = {}): Core {
       logger.info(SCOPE, "Kern startet");
       await secrets.load();
       cache.start();
+      // Do not wait for the network; the stored Spielstand is available immediately.
+      void cache.checkReset();
       await routines.start();
       logger.info(SCOPE, "Kern gestartet", {
         encryptionAvailable: secrets.status().encryptionAvailable,
