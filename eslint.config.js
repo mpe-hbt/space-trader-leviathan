@@ -63,6 +63,31 @@ export default tseslint.config(
     },
   },
   {
+    // Renderer tests run in Node under vitest and are never bundled; they may read files.
+    files: ["src/renderer/**/*.test.ts"],
+    languageOptions: { globals: globals.node },
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: [
+                "electron",
+                "electron/*",
+                "@leviathan/api-client",
+                "@anthropic-ai/sdk",
+                "@anthropic-ai/sdk/*",
+                "@octokit/*",
+              ],
+              message: "Der Renderer spricht nur per IPC mit dem Kern; nutze window.leviathan.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     files: ["packages/api-client/scripts/**/*.mjs"],
     languageOptions: { globals: globals.node },
   },

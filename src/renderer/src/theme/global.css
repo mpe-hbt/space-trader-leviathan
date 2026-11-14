@@ -1,0 +1,19 @@
+/* Base styles. Values only via the --stl- variables generated from tokens.ts. */
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--stl-bg-base);
+  color: var(--stl-text-primary);
+  font-family: var(--stl-font-family-body);
+  font-size: var(--stl-font-size-base);
+  line-height: var(--stl-line-height-text);
+}
+
+:focus-visible {
+  outline: 2px solid var(--stl-focus);
+  outline-offset: 2px;
+}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { AppInfo, GameStateSnapshot } from "@leviathan/shared";
 import { SettingsDialog } from "./settings/SettingsDialog";
+import "./App.css";
 
 function gameStateLine(state: GameStateSnapshot | null): string {
   if (!state?.resetDate) return "Noch kein Spielstand";
@@ -28,9 +29,9 @@ export function App() {
   }, []);
 
   return (
-    <main>
-      <h1>{info?.name ?? "…"}</h1>
-      <p>Version {info?.version ?? "…"}</p>
+    <main className="app">
+      <h1 className="app__title">{info?.name ?? "…"}</h1>
+      <p className="app__version">Version {info?.version ?? "…"}</p>
       <p>{gameStateLine(gameState)}</p>
       <button type="button" onClick={() => setSettingsOpen(true)}>
         Einstellungen

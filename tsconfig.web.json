@@ -16,5 +16,5 @@
     }
   },
   "include": ["src/renderer/src", "packages/*/src"],
-  "exclude": ["packages/**/*.test.ts"]
+  "exclude": ["packages/**/*.test.ts", "src/renderer/**/*.test.ts"]
 }
