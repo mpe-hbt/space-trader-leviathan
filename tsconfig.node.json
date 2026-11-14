@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "types": ["node"],
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "paths": {
+      "@leviathan/shared": ["./packages/shared/src"],
+      "@leviathan/api-client": ["./packages/api-client/src"]
+    }
+  },
+  "include": [
+    "src/main",
+    "src/preload",
+    "packages/*/src",
+    "electron.vite.config.ts",
+    "vitest.config.ts"
+  ]
+}

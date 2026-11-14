@@ -12,6 +12,24 @@ Desktop-Client für [SpaceTraders](https://spacetraders.io/), ein Mehrspieler-We
 
 Status: Planung. Die Roadmap steht in Issue #1, der Tech-Stack in ADR-01 ([Entscheidungen](docs/decisions.md)).
 
+## Entwicklung
+
+Voraussetzung ist Node.js in der Version aus `.nvmrc` (22). Die App besteht aus dem Kern (`src/main`), der IPC-Brücke (`src/preload`) und dem Renderer (`src/renderer`, React); gemeinsamer Code liegt in `packages/shared`, der spätere SpaceTraders-Client in `packages/api-client`.
+
+| Befehl | Zweck |
+|---|---|
+| `npm install` | Abhängigkeiten installieren, inklusive Electron |
+| `npm run dev` | App lokal starten; Änderungen am Renderer erscheinen sofort, Änderungen an Kern oder Brücke starten die App neu |
+| `npm test` | Unit-Tests mit Vitest ausführen |
+| `npm run lint` | Code mit ESLint prüfen |
+| `npm run typecheck` | Typen von Kern, Brücke, Paketen und Renderer prüfen |
+| `npm run format` | Code mit Prettier formatieren (`npm run format:check` prüft nur) |
+| `npm run build` | App nach `out/` bauen (`npm start` startet den Build) |
+
+Hinweis: `npm ci --ignore-scripts`, wie in der CI, lädt das Electron-Binary nicht. Lint, Typprüfung und Tests laufen damit; für `npm run dev` ist `npm install` nötig.
+
+`npm run build` schreibt nach `out/`; der Ordner steht in `.gitignore` (#48).
+
 ## Dokumentation
 
 | Bereich | Einstieg |
