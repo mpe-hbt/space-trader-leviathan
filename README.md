@@ -16,7 +16,7 @@ Status: Planung. Die Roadmap steht in Issue #1, der Tech-Stack in ADR-01 ([Entsc
 
 Voraussetzung ist Node.js in der Version aus `.nvmrc` (22). Die App besteht aus dem Kern (`src/main`), der IPC-Brücke (`src/preload`) und dem Renderer (`src/renderer`, React); gemeinsamer Code liegt in `packages/shared`, der SpaceTraders-Client in `packages/api-client`.
 
-Der Kern schreibt seine Logs nach `<Benutzerdatenverzeichnis>/logs/leviathan.log` und speichert Anthropic-API-Key und GitHub-Token in `<Benutzerdatenverzeichnis>/secrets.json`, verschlüsselt über `safeStorage`; schließt man das Fenster, läuft die App im Tray weiter, und erst „Beenden“ im Tray-Menü beendet sie.
+Der Kern schreibt seine Logs nach `<Benutzerdatenverzeichnis>/logs/leviathan.log` und speichert Anthropic-API-Key, GitHub-Token und Account-Token in `<Benutzerdatenverzeichnis>/secrets.json`, verschlüsselt über `safeStorage`, sowie die Agents mit ihrem verschlüsselten Agent-Token in `<Benutzerdatenverzeichnis>/agents.json`; schließt man das Fenster, läuft die App im Tray weiter, und erst „Beenden“ im Tray-Menü beendet sie.
 
 | Befehl | Zweck |
 |---|---|

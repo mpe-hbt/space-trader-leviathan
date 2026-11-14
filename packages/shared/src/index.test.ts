@@ -18,12 +18,22 @@ describe("shared", () => {
     expect(IpcChannel.GetGameState).toBe("game-state:get");
   });
 
+  it("names the IPC channels for agents", () => {
+    expect(IpcChannel.GetAgents).toBe("agents:get");
+    expect(IpcChannel.GetFactions).toBe("agents:get-factions");
+    expect(IpcChannel.RegisterAgent).toBe("agents:register");
+    expect(IpcChannel.ImportAgentToken).toBe("agents:import-token");
+    expect(IpcChannel.SelectAgent).toBe("agents:select");
+    expect(IpcChannel.RemoveAgent).toBe("agents:remove");
+    expect(IpcChannel.CheckAgents).toBe("agents:check");
+  });
+
   it("uses distinct channel names", () => {
     const names = Object.values(IpcChannel);
     expect(new Set(names).size).toBe(names.length);
   });
 
   it("lists the secret names", () => {
-    expect(SECRET_NAMES).toEqual(["anthropicApiKey", "githubToken"]);
+    expect(SECRET_NAMES).toEqual(["anthropicApiKey", "githubToken", "accountToken"]);
   });
 });

@@ -1,3 +1,4 @@
+import { AgentService, START_CHECK_PRIORITY } from "./agents";
 import { BoardComputerService } from "./board-computer";
 import { CacheService } from "./cache";
 import { GitHubService } from "./github";
@@ -33,6 +34,7 @@ export interface CoreOptions {
 export interface Core {
   settings: SettingsService;
   secrets: SecretStore;
+  agents: AgentService;
   routines: RoutineEngine;
   boardComputer: BoardComputerService;
   gitHub: GitHubService;
@@ -55,6 +57,14 @@ export function createCore(ports: CorePorts, options: CoreOptions = {}): Core {
   // The fetch port is the Request-Queue's transport; every SpaceTraders request goes through it.
   const requestQueue = new RequestQueue({ transport: ports.fetch, logger });
   const spaceTraders = new SpaceTradersService(requestQueue);
+  const agents = new AgentService(
+    secrets,
+    ports.cipher,
+    ports.files,
+    ports.events,
+    logger,
+    spaceTraders,
+  );
   const cache = new CacheService({
     database: ports.database,
     spaceTraders,
@@ -75,6 +85,7 @@ export function createCore(ports: CorePorts, options: CoreOptions = {}): Core {
   return {
     settings,
     secrets,
+    agents,
     routines,
     boardComputer,
     gitHub,
@@ -85,6 +96,13 @@ export function createCore(ports: CorePorts, options: CoreOptions = {}): Core {
     async start() {
       logger.info(SCOPE, "Kern startet");
       await secrets.load();
+      await agents.load();
+      const active = agents.status().active;
+      if (active !== null) {
+        void agents.check(active, START_CHECK_PRIORITY).catch((error: unknown) => {
+          logger.error(SCOPE, "Prüfung des aktiven Agents fehlgeschlagen", error);
+        });
+      }
       cache.start();
       // Do not wait for the network; the stored Spielstand is available immediately.
       void cache.checkReset();

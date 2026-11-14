@@ -5,7 +5,12 @@ import { settingsMessages } from "./messages";
 function status(anthropic: boolean, github: boolean, encryption = true): SettingsStatus {
   return {
     encryptionAvailable: encryption,
-    secrets: { anthropicApiKey: { configured: anthropic }, githubToken: { configured: github } },
+    // No note for a missing Account-Token; the agents dialog explains it.
+    secrets: {
+      anthropicApiKey: { configured: anthropic },
+      githubToken: { configured: github },
+      accountToken: { configured: false },
+    },
   };
 }
 

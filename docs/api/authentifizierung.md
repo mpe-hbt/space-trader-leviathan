@@ -4,7 +4,7 @@ summary: Die API nutzt zwei Bearer-Tokens, den Account-Token zum Registrieren vo
 audience: [tech, domain]
 tags: [api, sicherheit]
 owner: Entwicklung
-reviewed: 2026-11-13
+reviewed: 2026-11-14
 ---
 
 # Authentifizierung
@@ -37,6 +37,7 @@ Für fast alle Anfragen braucht man einen [Agent-Token](../glossary/Agent-Token.
 
 - Gemäß ADR-01 (siehe [Entscheidungen](../decisions.md)) liegen alle Tokens im [Kern](../glossary/Kern.md), verschlüsselt über Electron `safeStorage`. Der [Renderer](../glossary/Renderer.md) und der Board-Computer sehen sie nie.
 - Der Client verwaltet mehrere Agents und erkennt abgelaufene Tokens nach einem Reset (Issue #7).
+- Der Kern speichert den Account-Token in `secrets.json` und die Agents mit ihrem Agent-Token (je Token verschlüsselt) und dem aktiven Agent in `agents.json`; antwortet die API beim Prüfen mit HTTP 401 oder einem Fehlercode 4100–4108, markiert er den Agent als abgelaufen.
 - Tokens erscheinen nicht in Logs (Issue #41) und nie im Modellkontext des Board-Computers (Issue #26).
 
 ## Bezüge
