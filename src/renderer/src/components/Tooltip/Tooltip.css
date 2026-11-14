@@ -1,0 +1,39 @@
+.stl-tooltip-anchor {
+  position: relative;
+  display: inline-flex;
+}
+
+/* The padding bridges the gap to the element so the pointer can move onto the tooltip. */
+.stl-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 10;
+  padding-top: var(--stl-space-4);
+  animation: stl-tooltip-in var(--stl-duration-normal) var(--stl-easing-enter);
+}
+
+.stl-tooltip[hidden] {
+  display: none;
+}
+
+.stl-tooltip__bubble {
+  display: block;
+  width: max-content;
+  max-width: 280px;
+  padding: var(--stl-space-4) var(--stl-space-8);
+  border-radius: var(--stl-radius-md);
+  background: var(--stl-bg-surface3);
+  color: var(--stl-text-primary);
+  font-size: var(--stl-font-size-hint);
+  line-height: var(--stl-line-height-text);
+}
+
+@keyframes stl-tooltip-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

@@ -15,6 +15,6 @@
       "@leviathan/api-client": ["./packages/api-client/src"]
     }
   },
-  "include": ["src/renderer/src", "packages/*/src"],
+  "include": ["src/renderer/src", "packages/*/src", ".storybook/preview.tsx"],
   "exclude": ["packages/**/*.test.ts", "src/renderer/**/*.test.ts"]
 }

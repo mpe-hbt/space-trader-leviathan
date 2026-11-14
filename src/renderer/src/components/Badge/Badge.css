@@ -1,0 +1,42 @@
+.stl-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--stl-space-4);
+  padding: var(--stl-space-4) var(--stl-space-8);
+  border-radius: var(--stl-radius-sm);
+  color: var(--stl-text-primary);
+  font-size: var(--stl-font-size-hint);
+  line-height: var(--stl-line-height-text);
+}
+
+.stl-badge__icon {
+  flex: none;
+}
+
+.stl-badge--success {
+  background: color-mix(in srgb, var(--stl-status-success) 16%, transparent);
+}
+.stl-badge--success .stl-badge__icon {
+  color: var(--stl-status-success);
+}
+
+.stl-badge--warning {
+  background: color-mix(in srgb, var(--stl-status-warning) 16%, transparent);
+}
+.stl-badge--warning .stl-badge__icon {
+  color: var(--stl-status-warning);
+}
+
+.stl-badge--danger {
+  background: color-mix(in srgb, var(--stl-status-danger) 16%, transparent);
+}
+.stl-badge--danger .stl-badge__icon {
+  color: var(--stl-status-danger);
+}
+
+.stl-badge--info {
+  background: color-mix(in srgb, var(--stl-status-info) 16%, transparent);
+}
+.stl-badge--info .stl-badge__icon {
+  color: var(--stl-status-info);
+}

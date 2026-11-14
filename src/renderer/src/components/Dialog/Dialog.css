@@ -1,0 +1,44 @@
+.stl-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--stl-space-24);
+  background: color-mix(in srgb, var(--stl-bg-base) 70%, transparent);
+  opacity: 0;
+  transition: opacity var(--stl-duration-slow) var(--stl-easing-exit);
+}
+
+.stl-dialog-backdrop[data-visible] {
+  opacity: 1;
+  transition-timing-function: var(--stl-easing-enter);
+}
+
+.stl-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: var(--stl-space-16);
+  max-width: 640px;
+  max-height: 100%;
+  overflow: auto;
+  padding: var(--stl-space-24);
+  border-radius: var(--stl-radius-lg);
+  background: var(--stl-bg-surface1);
+  color: var(--stl-text-primary);
+  box-shadow: var(--stl-shadow-dialog);
+}
+
+.stl-dialog__title {
+  margin: 0;
+  font-family: var(--stl-font-family-heading);
+  font-size: var(--stl-font-size-h2);
+  line-height: var(--stl-line-height-heading);
+  font-weight: 600;
+}
+
+.stl-dialog__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--stl-space-8);
+}

@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import {
   SECRET_NAMES,
   type SaveResult,
   type SecretName,
   type SettingsStatus,
 } from "@leviathan/shared";
+import { Badge, Button, Dialog } from "../components";
 import { LOAD_FAILED_MESSAGE, SAVE_FAILED_MESSAGE, settingsMessages } from "./messages";
 
 const LABELS: Record<SecretName, string> = {
@@ -18,15 +19,10 @@ interface SettingsDialogProps {
 }
 
 export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
   const [status, setStatus] = useState<SettingsStatus | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-    if (open && !dialog.open) dialog.showModal();
-    if (!open && dialog.open) dialog.close();
     if (!open) return;
 
     let active = true;
@@ -79,13 +75,27 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
   const messages = status ? settingsMessages(status) : [];
 
   return (
-    <dialog ref={dialogRef} onClose={onClose} aria-labelledby="settings-title">
-      <h2 id="settings-title">Einstellungen</h2>
-      {error && <p role="alert">{error}</p>}
+    <Dialog
+      open={open}
+      onClose={onClose}
+      title="Einstellungen"
+      footer={
+        <Button variant="secondary" onClick={onClose}>
+          Schließen
+        </Button>
+      }
+    >
+      {error && (
+        <p role="alert">
+          <Badge tone="danger">{error}</Badge>
+        </p>
+      )}
       {messages.length > 0 && (
         <ul>
           {messages.map((message) => (
-            <li key={message}>{message}</li>
+            <li key={message}>
+              <Badge tone="warning">{message}</Badge>
+            </li>
           ))}
         </ul>
       )}
@@ -101,17 +111,18 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
           <form key={name} onSubmit={onSubmit}>
             <label htmlFor={inputId}>{LABELS[name]}</label>{" "}
             <input id={inputId} name="value" type="password" autoComplete="off" />{" "}
-            <span>{configured ? "hinterlegt" : "nicht hinterlegt"}</span>{" "}
-            <button type="submit">Speichern</button>{" "}
-            <button type="button" disabled={!configured} onClick={() => void clear(name)}>
+            <Badge tone={configured ? "success" : "info"}>
+              {configured ? "hinterlegt" : "nicht hinterlegt"}
+            </Badge>{" "}
+            <Button variant="primary" type="submit">
+              Speichern
+            </Button>{" "}
+            <Button variant="danger" disabled={!configured} onClick={() => void clear(name)}>
               Entfernen
-            </button>
+            </Button>
           </form>
         );
       })}
-      <form method="dialog">
-        <button type="submit">Schließen</button>
-      </form>
-    </dialog>
+    </Dialog>
   );
 }
