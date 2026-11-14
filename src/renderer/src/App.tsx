@@ -3,6 +3,7 @@ import type { AgentsStatus, AppInfo } from "@leviathan/shared";
 import { AgentsDialog } from "./agents/AgentsDialog";
 import { LOAD_AGENTS_FAILED_MESSAGE, agentNotice } from "./agents/messages";
 import { SettingsDialog } from "./settings/SettingsDialog";
+import "./App.css";
 
 export function App() {
   const [info, setInfo] = useState<AppInfo | null>(null);
@@ -40,9 +41,9 @@ export function App() {
   const notice = agents ? agentNotice(agents) : null;
 
   return (
-    <main>
-      <h1>{info?.name ?? "…"}</h1>
-      <p>Version {info?.version ?? "…"}</p>
+    <main className="app">
+      <h1 className="app__title">{info?.name ?? "…"}</h1>
+      <p className="app__version">Version {info?.version ?? "…"}</p>
       {agents?.active && <p>Aktiver Agent: {agents.active}</p>}
       {agentsError && <p role="alert">{agentsError}</p>}
       {notice && (

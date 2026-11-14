@@ -48,5 +48,9 @@ export default defineConfig({
   renderer: {
     resolve: { alias },
     plugins: [react(), cspPlugin()],
+    build: {
+      // Never inline fonts as data: URLs; the CSP only allows font-src 'self'.
+      assetsInlineLimit: (file: string) => (/\.woff2?$/.test(file) ? false : undefined),
+    },
   },
 });
